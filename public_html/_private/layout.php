@@ -43,7 +43,7 @@ function md_page_end(): void
 </main>
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <div class="site-footer__bot"><span>© 2026 Mads Dahlén Lund-Nielsen</span><span>esgernemt.dk · qlim8.com</span></div>
+    <div class="site-footer__bot"><span>© 2026 Mads Dahlén Lund-Nielsen</span><span>esgernemt.dk · qlim8.com · <a href="/privatliv/">Privatlivspolitik</a></span></div>
   </div>
 </footer>
 </body>
