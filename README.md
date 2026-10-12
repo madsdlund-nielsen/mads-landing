@@ -8,7 +8,7 @@ No frameworks, no build step, no Composer.
 ## How it works
 
 ```
-/  /kurser/  /bogen/  /priser/  /kontakt/   static pages (assets/css, assets/js)
+/  /kurser/  /bogen/  /priser/  /kontakt/  /privatliv/   static pages (assets/css, assets/js)
 
 /kontakt/ form ──▶ kontakt.php    ── saves to `inquiries`, mails mads@qlim8.com
                                      (From no-reply@madslundnielsen.dk, Reply-To the visitor)
@@ -27,7 +27,7 @@ The price calculator on `/priser/` and the course tabs on `/kurser/` live in
 | Path | What |
 |---|---|
 | `public_html/` | The webroot on simply.com |
-| `public_html/*/index.html` | The five pages, plus `404.html` |
+| `public_html/*/index.html` | The six pages, plus `404.html` |
 | `public_html/assets/` | CSS, JS, self-hosted Manrope font, images |
 | `public_html/kontakt.php`, `nyhedsbrev.php` | Form endpoints |
 | `public_html/_private/` | Config and shared PHP. Blocked from the web by `.htaccess` |
@@ -65,12 +65,11 @@ SELECT consent_at, name, email, source FROM newsletter ORDER BY consent_at;
 
 ## Before launch / TODO
 
-- Book: format/pages and price are hidden on `/bogen/` and say "Pris på forespørgsel"
-  on `/priser/` (HTML comments mark the spots).
-- LinkedIn link on `/kontakt/` is left out until there is a URL.
-- Privacy policy (Privatliv) for the contact form and newsletter, and a way to unsubscribe.
 - Send a test inquiry on the live site and check it arrives at mads@qlim8.com.
 - Add the site in Google Search Console and submit `https://madslundnielsen.dk/sitemap.xml`.
+- When newsletter email templates are made, every email must include an unsubscribe link
+  (the privacy policy promises it). If a sending service is taken into use, list it as a
+  processor on `/privatliv/`.
 
 ## Local testing
 

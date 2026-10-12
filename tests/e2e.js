@@ -10,7 +10,7 @@ const sql = (q) => execSync(`mysql --default-character-set=utf8mb4 -N mads_test 
 const curl = (args) => execSync(`curl -s ${args}`).toString();
 let failures = 0;
 const check = (label, ok, extra = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} ${label}${ok ? '' : ' ' + extra}`); if (!ok) failures++; };
-const PAGES = ['/', '/kurser/', '/bogen/', '/priser/', '/kontakt/'];
+const PAGES = ['/', '/kurser/', '/bogen/', '/priser/', '/kontakt/', '/privatliv/'];
 
 (async () => {
   fs.mkdirSync(SHOTS, { recursive: true });
@@ -47,7 +47,7 @@ const PAGES = ['/', '/kurser/', '/bogen/', '/priser/', '/kontakt/'];
       ld: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => JSON.parse(s.textContent)),
     }));
     check(`${p}: lang=da, canonical, description, og:image, én h1, aktiv nav`,
-      meta.lang === 'da' && meta.canon === 'https://madslundnielsen.dk' + p && meta.desc?.length > 50 && meta.og?.endsWith('og-image.png') && meta.h1 === 1 && meta.cur === p, JSON.stringify(meta));
+      meta.lang === 'da' && meta.canon === 'https://madslundnielsen.dk' + p && meta.desc?.length > 50 && meta.og?.endsWith('og-image.png') && meta.h1 === 1 && (p === '/privatliv/' ? meta.cur == null : meta.cur === p), JSON.stringify(meta));
     if (p === '/') check('forside: titel + JSON-LD Person/WebSite', (await page.title()) === 'Mads Dahlén Lund-Nielsen | ESG-kurser, Keynotes & Rådgivning' && JSON.stringify(meta.ld).includes('"Person"') && JSON.stringify(meta.ld).includes('"WebSite"'));
     if (p === '/kurser/') check('kurser: 3 Course med DKK-tilbud', meta.ld[0]['@graph'].filter((x) => x['@type'] === 'Course' && x.offers.priceCurrency === 'DKK').length === 3);
     if (p === '/bogen/') check('bogen: JSON-LD Book', meta.ld[0]['@type'] === 'Book');
@@ -59,7 +59,7 @@ const PAGES = ['/', '/kurser/', '/bogen/', '/priser/', '/kontakt/'];
   for (const f of ['/robots.txt', '/sitemap.xml', '/llms.txt', '/404.html', '/assets/img/og-image.png', '/assets/img/favicon.svg', '/assets/img/apple-touch-icon.png']) {
     check(`${f} findes`, curl(`-o /dev/null -w '%{http_code}' ${SITE}${f}`) === '200');
   }
-  check('sitemap indeholder 5 sider', (curl(`${SITE}/sitemap.xml`).match(/<loc>/g) || []).length === 5);
+  check('sitemap indeholder 6 sider', (curl(`${SITE}/sitemap.xml`).match(/<loc>/g) || []).length === 6);
 
   // Kurser: faner + deep links + uden JS
   await page.setViewportSize({ width: 1280, height: 900 });
