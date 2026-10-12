@@ -1,0 +1,40 @@
+name: Deploy to simply.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint PHP
+        run: find public_html -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Write config.php from secrets
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          php -r '
+            $c = require "public_html/_private/config.sample.php";
+            $c["db"]["pass"] = getenv("DB_PASSWORD");
+            $c["ip_salt"] = hash("sha256", "ip-salt:" . getenv("DB_PASSWORD"));
+            file_put_contents("public_html/_private/config.php", "<?php\nreturn " . var_export($c, true) . ";\n");
+          '
+
+      - name: Upload public_html over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.simply.com
+          username: madslundnielsen.dk
+          password: ${{ secrets.SIMPLY_FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./public_html/
+          server-dir: ./public_html/

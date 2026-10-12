@@ -1,0 +1,9 @@
+# Mads Dahlén Lund-Nielsen — søgemaskiner og AI-assistenter er velkomne.
+# Formular-endpoints er ikke sider, der skal indekseres.
+User-agent: *
+Allow: /
+Disallow: /_private/
+Disallow: /kontakt.php
+Disallow: /nyhedsbrev.php
+
+Sitemap: https://madslundnielsen.dk/sitemap.xml

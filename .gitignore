@@ -1,0 +1,4 @@
+public_html/_private/config.php
+tests/screenshots/
+node_modules/
+.DS_Store
